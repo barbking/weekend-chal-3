@@ -1,0 +1,15 @@
+
+
+.container {
+  align-content: center;
+}
+
+input {
+  width: 600px;
+  height: 25px;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+}
