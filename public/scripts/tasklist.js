@@ -11,28 +11,70 @@ function docReady (){
 }
 
 //browser to start with all db table data loaded to DOM
+// function getTaskTable (){
+//   console.log ('in getTaskTable');
+//   $.ajax({
+//     method: 'GET',
+//     url: '/allTasks',
+//     success: function (res) {
+//       console.log(res);
+//       // var options = '<select><option value="select">Options</option><option value="commpleted">Mark Completed</option><option value="delete">Delete</option></select>';
+//       $('#tasks, #taskinput').empty();
+//       for (i=0; i<res.length; i++) {
+//         var options = '<button type="button" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+//         if (res[i].active){
+//           options = '<button type="button" class="true" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+//           $('#tasks').append('<div class="true"><p><span>[&#8199;]</span>'+'  '+ res[i].task+options+'</p></div>');
+//         } else {
+//           options = '<button type="button" class="false" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+//           $('#tasks').append('<div class="false"><p><span>[&#10003;]</span>'+'  '+ res[i].task+options+'</p></div>');
+//         }
+//       }
+//     }
+//   });//end of ajax get
+// }//end of getTaskTable
+
+//browser to start with all db table data loaded to DOM
 function getTaskTable (){
+  $('#tasks, #taskinput').empty();
+  
+  getActiveTasks();
+  getCompletedTasks();
+}
+
+//order active tasks first on page
+function getActiveTasks (){
   console.log ('in getTaskTable');
   $.ajax({
     method: 'GET',
-    url: '/allTasks',
+    url: '/activeTasks',
     success: function (res) {
-      // var options = '<select><option value="select">Options</option><option value="commpleted">Mark Completed</option><option value="delete">Delete</option></select>';
-      $('#tasks, #taskinput').empty();
+      console.log(res);
       for (i=0; i<res.length; i++) {
-        var options = '<button type="button" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
-        if (res[i].active){
-          options = '<button type="button" class="true" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
-          $('#tasks').append('<div class="true"><p><span>[&#10003;]</span>'+'  '+ res[i].task+options+'</p></div>');
-        } else {
-          options = '<button type="button" class="false" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
-          $('#tasks').append('<div class="false"><p><span>[&#8199;]</span>'+'  '+ res[i].task+options+'</p></div>');
-        }
+          var options = '<button type="button" class="true" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+          $('#tasks').append('<div class="true"><p><span>[&#8199;]</span>'+'  '+ res[i].task+options+'</p></div>');
       }
     }
   });//end of ajax get
 }//end of getTaskTable
 
+//order completed tasks last on page
+function getCompletedTasks (){
+  console.log ('in getTaskTable');
+  $.ajax({
+    method: 'GET',
+    url: '/completedTasks',
+    success: function (res) {
+      console.log(res);
+      for (i=0; i<res.length; i++) {
+        var options = '<button type="button" class="false" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+        $('#tasks').append('<div class="false"><p><span>[&#10003;]</span>'+'  '+ res[i].task+options+'</p></div>');
+      }
+    }
+  });//end of ajax get
+}//end of getTaskTable
+
+//add Task from input submit
 function addTask (){
   console.log('in refreshTable func');
   var taskToAdd = {

@@ -33,8 +33,31 @@ app.get( '/', function( req, res ){
   res.sendFile( path.resolve('public/index.html'));//path so server knows where to get static files
 }); // end base url
 
-//respond to get request for task list db
-app.get ('/allTasks', function(req,res){
+// //respond to get request for task list db
+// app.get ('/allTasks', function(req,res){
+//   console.log('hit allTasks');
+//   var allTasks = [];
+//   pool.connect(function(err, connection, done){
+//     if(err) {
+//       console.log('err');
+//       res.send(400);
+//     } else {
+//       console.log('connected to db');
+//       var resultSet = connection.query( "SELECT * from tasks" );
+//       resultSet.on( 'row', function( row ){
+//         allTasks.push( row );
+//         console.log(allTasks);
+//       });
+//       resultSet.on( 'end', function(){
+//         done();
+//         res.send(allTasks);// res.send array of allTasks
+//       }); //end on end
+//     }
+//   });//end pool
+// });
+
+//respond to get request for active task list db
+app.get ('/activeTasks', function(req,res){
   console.log('hit allTasks');
   var allTasks = [];
   pool.connect(function(err, connection, done){
@@ -43,7 +66,30 @@ app.get ('/allTasks', function(req,res){
       res.send(400);
     } else {
       console.log('connected to db');
-      var resultSet = connection.query( "SELECT * from tasks" );
+      var resultSet = connection.query( "SELECT * from tasks WHERE active=true" );
+      resultSet.on( 'row', function( row ){
+        allTasks.push( row );
+        console.log(allTasks);
+      });
+      resultSet.on( 'end', function(){
+        done();
+        res.send(allTasks);// res.send array of allTasks
+      }); //end on end
+    }
+  });//end pool
+});
+
+//respond to get request for completed task list db
+app.get ('/completedTasks', function(req,res){
+  console.log('hit allTasks');
+  var allTasks = [];
+  pool.connect(function(err, connection, done){
+    if(err) {
+      console.log('err');
+      res.send(400);
+    } else {
+      console.log('connected to db');
+      var resultSet = connection.query( "SELECT * from tasks WHERE active=false" );
       resultSet.on( 'row', function( row ){
         allTasks.push( row );
         console.log(allTasks);
@@ -73,7 +119,7 @@ app.post( '/addTask', function( req, res ){
   res.send(200);
 });
 
-//update upon task check, db complete change to true
+//update upon task check, db active column changes to either false or true
 app.post( '/checkTask', function( req, res ){
   console.log( 'hit taskList url' );
   pool.connect( function(err, connection, done) {
@@ -82,7 +128,17 @@ app.post( '/checkTask', function( req, res ){
       res.send( 400 );
     } else {
       console.log('connected to db');
-        connection.query('UPDATE tasks set active='+req.body.active+' WHERE id='+req.body.id);//need req.body
+        connection.query('UPDATE tasks set active='+req.body.active+' WHERE id='+req.body.id);
+      done();
+    } //end on end
+  }); //end pool
+  pool.connect( function(err, connection, done) {
+    if(err) {
+      console.log('err');
+      res.send( 400 );
+    } else {
+      console.log('connected to db');
+        connection.query('SELECT * FROM tasks ORDER BY active');
       done();
     } //end on end
   }); //end pool

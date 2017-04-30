@@ -12,12 +12,12 @@ h1 {
   text-align: center;
 }
 
-.true {
+.false {
   background-color: #0fc59b;
   border: solid 1px;
 }
 
-.false {
+.true {
   background-color: #df5b65;
   border: solid 1px;
 }

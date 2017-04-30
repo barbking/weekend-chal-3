@@ -14,7 +14,9 @@
 
 [x] Styling
 
-[x] Delete confirm prompt
+[x] (HARD) Delete confirm prompt
+
+[x] (PRO) Move completed tasks to the bottom of the page, remaining tasks left to complete are brought to the top of the list.
 
 
 Hello Primers!
