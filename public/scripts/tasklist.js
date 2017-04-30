@@ -5,8 +5,8 @@ $(document).ready(docReady);
 function docReady (){
   console.log('in docReady');
   $('#addtask').on('click', addTask);
-  $('body').on('click', '#complete', check);
-  // $('body').on('click','#delete', deleteTask);
+  $('body').on('click', '#check', check);
+  $('body').on('click','#delete', deleteTask);
   getTaskTable();
 }
 
@@ -20,10 +20,12 @@ function getTaskTable (){
       // var options = '<select><option value="select">Options</option><option value="commpleted">Mark Completed</option><option value="delete">Delete</option></select>';
       $('#tasks, #taskinput').empty();
       for (i=0; i<res.length; i++) {
-        var options = '<button type="button" id="complete"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+        var options = '<button type="button" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
         if (res[i].active){
-          $('#tasks').append('<div class="false"><p><span>[&#10003;]</span>'+'  '+ res[i].task+options+'</p></div>');
+          options = '<button type="button" class="true" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
+          $('#tasks').append('<div class="true"><p><span>[&#10003;]</span>'+'  '+ res[i].task+options+'</p></div>');
         } else {
+          options = '<button type="button" class="false" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
           $('#tasks').append('<div class="false"><p><span>[]</span>'+'  '+ res[i].task+options+'</p></div>');
         }
       }
@@ -48,21 +50,45 @@ function addTask (){
   });//end ajax post
     $('#taskinput').empty();
 }
-//
+//when click check/uncheck button, switch bewteen completed(true) and not completed(false)
 function check (){
   console.log('in check func');
-  var checkItemId = $(this).data('id');//get table ID
+  var checkTaskId = $(this).data('id');//get table ID
+  var swapVal = $(this).attr("class");
+  console.log(swapVal);
+  var active;
+  if (swapVal==="true") {
+    active = 'false';
+  } else {
+    active = 'true';
+  }
   var checkItem = {
-    id: checkItemId
+    id: checkTaskId,
+    active: active
   };
+  console.log(checkItem);
   $.ajax ({
     method: 'POST',
     url: '/checkTask',
     data: checkItem,
     success: function (res) {
-      console.log('refreshTable after check', res);
       getTaskTable();
     }
   });
+}
 
+function deleteTask (){
+  console.log('in deleteTask func');
+  var deleteTaskId = $(this).data('id');//get table ID
+  var deleteTask = {
+    id: deleteTaskId,
+  };
+  $.ajax ({
+    method: 'POST',
+    url: '/deleteTask',
+    data: deleteTaskId,
+    success: function (res){
+      getTaskTable();
+    }
+  });
 }
