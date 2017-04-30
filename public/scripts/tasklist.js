@@ -26,7 +26,7 @@ function getTaskTable (){
           $('#tasks').append('<div class="true"><p><span>[&#10003;]</span>'+'  '+ res[i].task+options+'</p></div>');
         } else {
           options = '<button type="button" class="false" id="check"'+'data-id="'+res[i].id+'">Check/UnCheck</button><button type="button" id="delete"'+'data-id="'+res[i].id+'">Delete</button>';
-          $('#tasks').append('<div class="false"><p><span>[]</span>'+'  '+ res[i].task+options+'</p></div>');
+          $('#tasks').append('<div class="false"><p><span>[&#8199;]</span>'+'  '+ res[i].task+options+'</p></div>');
         }
       }
     }
@@ -77,6 +77,7 @@ function check (){
   });
 }
 
+//delete task on delete button click
 function deleteTask (){
   console.log('in deleteTask func');
   var deleteTaskId = $(this).data('id');//get table ID
@@ -86,7 +87,7 @@ function deleteTask (){
   $.ajax ({
     method: 'POST',
     url: '/deleteTask',
-    data: deleteTaskId,
+    data: deleteTask,
     success: function (res){
       getTaskTable();
     }

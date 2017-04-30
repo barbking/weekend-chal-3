@@ -98,7 +98,7 @@ app.post( '/deleteTask', function( req, res ){
       res.send( 400 );
     } else {
       console.log('connected to db');
-        connection.query('DELETE tasks WHERE id='+req.body.id);//need req.body
+        connection.query('DELETE from tasks WHERE id='+req.body.id);//need req.body
       done();
     } //end on end
   }); //end pool
