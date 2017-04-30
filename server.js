@@ -21,8 +21,8 @@ app.use(express.static('public'));
 app.use( bodyParser.urlencoded( { extended: true } ) );
 
 //spin up server
-app.listen(3000, function(){
-  console.log('server on:', 3000);
+app.listen(3003, function(){
+  console.log('server on:', 3003);
 });
 
 //routes
@@ -67,8 +67,23 @@ app.post( '/addTask', function( req, res ){
       console.log('connected to db');
       //need req.body
       connection.query( "INSERT INTO tasks (task) VALUES ('"+req.body.taskInput+"')");
-      // INSERT INTO users (username, active) VALUES ('millie11', true );
-      // close connection to reopen spot in pool
+      done();
+    } //end on end
+  }); //end pool
+  res.send(200);
+});
+
+//update upon task check, db complete change to true
+app.post( '/checkTask', function( req, res ){
+  console.log( 'hit taskList url' );
+  pool.connect( function(err, connection, done) {
+    if(err) {
+      console.log('err');
+      res.send( 400 );
+    } else {
+      console.log('connected to db');
+      //need req.body
+      connection.query('UPDATE tasks set active=true WHERE id='+req.body.id);
       done();
     } //end on end
   }); //end pool
