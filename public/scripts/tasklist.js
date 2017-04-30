@@ -48,8 +48,8 @@ function addTask (){
       getTaskTable();
     }
   });//end ajax post
-    $('#taskinput').empty();
-}
+}//end of addTask func
+
 //when click check/uncheck button, switch bewteen completed(true) and not completed(false)
 function check (){
   console.log('in check func');
@@ -74,22 +74,27 @@ function check (){
     success: function (res) {
       getTaskTable();
     }
-  });
-}
+  });//end of ajax
+}//end of check func
 
 //delete task on delete button click
 function deleteTask (){
   console.log('in deleteTask func');
-  var deleteTaskId = $(this).data('id');//get table ID
-  var deleteTask = {
-    id: deleteTaskId,
-  };
-  $.ajax ({
-    method: 'POST',
-    url: '/deleteTask',
-    data: deleteTask,
-    success: function (res){
-      getTaskTable();
-    }
-  });
-}
+  //else/if to propmt for confirm task delete
+  if (confirm('Are you sure you want to delete this task?')) {
+    var deleteTaskId = $(this).data('id');//get table ID
+    var deleteTask = {
+      id: deleteTaskId,
+    };
+    $.ajax ({
+      method: 'POST',
+      url: '/deleteTask',
+      data: deleteTask,
+      success: function (res){
+        getTaskTable();
+      }
+    });//end ajax
+  } else {
+    // Do nothing!
+ }//end else/if
+}//end deleteTask func

@@ -12,7 +12,9 @@
 
 [x] Deleting a task should remove it both from the Front End as well as the Database.
 
-[] Styling
+[x] Styling
+
+[x] Delete confirm prompt
 
 
 Hello Primers!
