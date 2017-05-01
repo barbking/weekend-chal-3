@@ -37,7 +37,6 @@ function docReady (){
 //browser to start with all db table data loaded to DOM
 function getTaskTable (){
   $('#tasks, #taskinput').empty();
-  
   getActiveTasks();
   getCompletedTasks();
 }
